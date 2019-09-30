@@ -133,10 +133,10 @@ namespace NAudio.Wave
             
             var icbh = new ActivateAudioInterfaceCompletionHandler(ac2 => InitializeCaptureDevice((IAudioClient)ac2));
             // must be called on UI thread
-            NativeMethods.ActivateAudioInterfaceAsync(device, IID_IAudioClient2, IntPtr.Zero, icbh, out var activationOperation);
+            NativeMethodsRT.ActivateAudioInterfaceAsync(device, IID_IAudioClient2, IntPtr.Zero, icbh, out var activationOperation);
             audioClient = new AudioClient((IAudioClient)(await icbh));
 
-            hEvent = NativeMethods.CreateEventExW(IntPtr.Zero, IntPtr.Zero, 0, EventAccess.EVENT_ALL_ACCESS);
+            hEvent = NativeMethodsRT.CreateEventExW(IntPtr.Zero, IntPtr.Zero, 0, EventAccess.EVENT_ALL_ACCESS);
             audioClient.SetEventHandle(hEvent);
 
             captureState = WasapiCaptureState.Stopped;
@@ -231,7 +231,7 @@ namespace NAudio.Wave
                 {
                     if (packetSize == 0)
                     {
-                        if (NativeMethods.WaitForSingleObjectEx(hEvent, 100, true) != 0)
+                        if (NativeMethodsRT.WaitForSingleObjectEx(hEvent, 100, true) != 0)
                         {
                             throw new Exception("Capture event timeout");
                         }
@@ -349,7 +349,7 @@ namespace NAudio.Wave
             {
                 StopRecording();
 
-                NativeMethods.CloseHandle(hEvent);
+                NativeMethodsRT.CloseHandle(hEvent);
                 audioClient?.Dispose();
             }
             catch (Exception ex)

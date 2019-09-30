@@ -43,7 +43,7 @@ namespace NAudio.Wave.Compression
         /// <returns>Handle to the driver</returns>
         public static AcmDriver AddLocalDriver(string driverFile)
         {
-            IntPtr handle = NativeMethods.LoadLibrary(driverFile);
+            IntPtr handle =  NativeMethods.LoadLibrary(driverFile);
             if (handle == IntPtr.Zero)
             {
                 throw new ArgumentException("Failed to load driver file");
@@ -51,7 +51,7 @@ namespace NAudio.Wave.Compression
             var driverProc = NativeMethods.GetProcAddress(handle, "DriverProc");
             if (driverProc == IntPtr.Zero)
             {
-                NativeMethods.FreeLibrary(handle);
+                NAudio.Utils.NativeMethods.FreeLibrary(handle);
                 throw new ArgumentException("Failed to discover DriverProc");
             }
             var result = AcmInterop.acmDriverAdd(out IntPtr driverHandle,

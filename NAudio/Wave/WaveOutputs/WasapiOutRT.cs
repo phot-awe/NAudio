@@ -121,7 +121,7 @@ namespace NAudio.Wave
                 });
             var IID_IAudioClient2 = new Guid("726778CD-F60A-4eda-82DE-E47610CD78AA");
             IActivateAudioInterfaceAsyncOperation activationOperation;
-            NativeMethods.ActivateAudioInterfaceAsync(device, IID_IAudioClient2, IntPtr.Zero, icbh, out activationOperation);
+            NativeMethodsRT.ActivateAudioInterfaceAsync(device, IID_IAudioClient2, IntPtr.Zero, icbh, out activationOperation);
             var audioClient2 = await icbh;
             audioClient = new AudioClient((IAudioClient)audioClient2);
         }
@@ -169,7 +169,7 @@ namespace NAudio.Wave
                             isClientRunning = true;
                         }
                         // If using Event Sync, Wait for notification from AudioClient or Sleep half latency
-                        var r = NativeMethods.WaitForSingleObjectEx(frameEventWaitHandle, timeout, true);
+                        var r = NativeMethodsRT.WaitForSingleObjectEx(frameEventWaitHandle, timeout, true);
                         if (r != 0) throw new InvalidOperationException("Timed out waiting for event");
                         // See how much buffer space is available.
                         int numFramesPadding = 0;
@@ -220,7 +220,7 @@ namespace NAudio.Wave
                 audioClient.Dispose();
                 audioClient = null;
                 renderClient = null;
-                NativeMethods.CloseHandle(frameEventWaitHandle);
+                NativeMethodsRT.CloseHandle(frameEventWaitHandle);
 
             }
         }
@@ -423,7 +423,7 @@ namespace NAudio.Wave
             }
 
             // Create the Wait Event Handle
-            frameEventWaitHandle = NativeMethods.CreateEventExW(IntPtr.Zero, IntPtr.Zero, 0, EventAccess.EVENT_ALL_ACCESS);
+            frameEventWaitHandle = NativeMethodsRT.CreateEventExW(IntPtr.Zero, IntPtr.Zero, 0, EventAccess.EVENT_ALL_ACCESS);
             audioClient.SetEventHandle(frameEventWaitHandle);
 
             // Get the RenderClient
@@ -468,7 +468,7 @@ namespace NAudio.Wave
     /// <summary>
     /// Some useful native methods for Windows 8/10 support ( https://msdn.microsoft.com/en-us/library/windows/desktop/hh802935(v=vs.85).aspx )
     /// </summary>
-    class NativeMethods
+    class NativeMethodsRT
     {
         [DllImport("api-ms-win-core-synch-l1-2-0.dll", CharSet = CharSet.Unicode, ExactSpelling = false,
             PreserveSig = true, SetLastError = true)]

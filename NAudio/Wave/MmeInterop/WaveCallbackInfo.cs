@@ -16,8 +16,8 @@ namespace NAudio.Wave
         /// </summary>
         public IntPtr Handle { get; private set; }
 
-        private WaveWindow waveOutWindow;
-        private WaveWindowNative waveOutWindowNative;
+        //private WaveWindow waveOutWindow;
+        //private WaveWindowNative waveOutWindowNative;
 
         /// <summary>
         /// Sets up a new WaveCallbackInfo for function callbacks
@@ -59,14 +59,16 @@ namespace NAudio.Wave
         {
             if (Strategy == WaveCallbackStrategy.NewWindow)
             {
-                waveOutWindow = new WaveWindow(callback);
-                waveOutWindow.CreateControl();
-                this.Handle = waveOutWindow.Handle;
+                throw new Exception("can't do on uwp'");
+                //waveOutWindow = new WaveWindow(callback);
+                //waveOutWindow.CreateControl();
+                //this.Handle = waveOutWindow.Handle;
             }
             else if (Strategy == WaveCallbackStrategy.ExistingWindow)
             {
-                waveOutWindowNative = new WaveWindowNative(callback);
-                waveOutWindowNative.AssignHandle(this.Handle);
+                throw new Exception("can't do on uwp'");
+//                waveOutWindowNative = new WaveWindowNative(callback);
+  //              waveOutWindowNative.AssignHandle(this.Handle);
             }
         }
 
@@ -100,6 +102,7 @@ namespace NAudio.Wave
 
         internal void Disconnect()
         {
+            /*
             if (waveOutWindow != null)
             {
                 waveOutWindow.Close();
@@ -109,7 +112,7 @@ namespace NAudio.Wave
             {
                 waveOutWindowNative.ReleaseHandle();
                 waveOutWindowNative = null;
-            }
+            }*/
         }
     }
 }
